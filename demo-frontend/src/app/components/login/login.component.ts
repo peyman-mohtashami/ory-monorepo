@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Route} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {FormsModule} from '@angular/forms';
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -11,47 +12,40 @@ import {FormsModule} from '@angular/forms';
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
-  flow: any;
-  identifier: string = '';
-  password: string = '';
-  flowId: string = '';
+  constructor(private route: ActivatedRoute, private http: HttpClient) {
 
-  constructor(private route: ActivatedRoute, private auth: AuthService) {}
 
-  ngOnInit(): void {
-    this.flowId = this.route.snapshot.queryParamMap.get('flow') || '';
-
-    if (!this.flowId) {
-      // Redirect user to start the login flow
-      window.location.href = 'http://localhost:4433/self-service/login/browser';
-      return;
-    }
-
-    this.auth.getLoginFlow(this.flowId).subscribe({
-      next: (flow) => this.flow = flow,
-      error: () => {
-        // Restart login flow if flow expired or invalid
-        window.location.href = 'http://localhost:4433/self-service/login/browser';
-      }
-    });
   }
 
-  submit(): void {
-    const payload = {
-      method: 'password',
-      password: this.password,
-      identifier: this.identifier
+  ngOnInit(): void {
+    const code = this.route.snapshot.queryParamMap.get('code');
+    console.log(this.route.snapshot)
+    alert("code: " + code)
+    if (code) {
+      this.exchangeCodeForTokens(code);
+    } else {
+      console.error('Authorization code not found.');
+    }
+  }
+
+  exchangeCodeForTokens(code: string) {
+    const clientId = 'your-client-id';
+    const clientSecret = 'your-client-secret';
+    const redirectUri = 'http://localhost:4200/callback';
+
+    const tokenRequest = {
+      code: code,
+      client_id: clientId,
+      client_secret: clientSecret,
+      redirect_uri: redirectUri,
+      grant_type: 'authorization_code'
     };
 
-    this.auth.submitLogin(this.flowId, payload).subscribe({
-      next: (res) => {
-        console.log('Login successful', res);
-        // Redirect after login (adjust to your app)
-        window.location.href = '/dashboard';
-      },
-      error: (err) => {
-        console.error('Login failed', err);
-      }
+    this.http.post('http://127.0.0.1:4444/oauth2/token', tokenRequest).subscribe((response: any) => {
+      console.log('Tokens:', response);
+      localStorage.setItem('access_token', response.access_token);
+      localStorage.setItem('refresh_token', response.refresh_token);
+      window.location.href = '/dashboard'; // Redirect to your app's main page
     });
   }
 }
