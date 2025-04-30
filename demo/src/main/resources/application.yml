@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:4444/.well-known/jwks.json
+      client:
+        registration:
+          ory:
+            client-id: client_id_demo_app
+            client-secret: secret_demo_app
+            scope:
+              - openid
+              - profile
+              - email
+              - offline
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-name: client_name_demo_app
+        provider:
+          ory:
+            authorization-uri: http://127.0.0.1:4444/oauth2/auth
+            token-uri: http://127.0.0.1:4444/oauth2/token
+            user-info-uri: http://127.0.0.1:4444/userinfo
+            jwk-set-uri: http://localhost:4444/.well-known/jwks.json   # Add this line to provide the JWK Set URI
+            user-name-attribute: sub
