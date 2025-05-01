@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/demo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/demo-be" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/demo-frontend" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/kratos-selfservice-ui-node" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/ory-kratos-hydra-integration-demo" vcs="Git" />
