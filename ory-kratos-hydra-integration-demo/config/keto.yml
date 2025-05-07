@@ -1,5 +1,3 @@
-#dsn: memory
-
 log:
   level: debug
 

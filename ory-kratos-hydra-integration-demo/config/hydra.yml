@@ -1,6 +1,18 @@
 serve:
   cookies:
     same_site_mode: None
+  public:
+    cors:
+      enabled: true
+      allowed_origins:
+        - 'http://127.0.0.1:4200'
+      allowed_methods:
+        - 'GET'
+        - 'POST'
+      allowed_headers:
+        - 'Authorization'
+        - 'Content-Type'
+      allow_credentials: true
 
 urls:
   self:
@@ -11,9 +23,11 @@ urls:
   identity_provider:
     publicUrl: http://127.0.0.1:4433
     url: http://127.0.0.1:4434
-#  device:
-#    verification: http://127.0.0.1:3000/device/verify
-#    success: http://127.0.0.1:3000/device/success
+  post_logout_redirect: http://127.0.0.1:4200/post-logout
+
+#oauth2:
+#  token_hook:
+#    url: http://host.docker.internal:8080/ory/token-hook
 
 strategies:
   access_token: jwt

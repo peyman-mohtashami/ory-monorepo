@@ -92,6 +92,7 @@ services:
       - hydra-migrate
     networks:
       - intranet
+
   hydra-migrate:
     image: oryd/hydra:v2.3.0
     environment:
